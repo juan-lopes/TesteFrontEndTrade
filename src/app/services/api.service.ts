@@ -5,38 +5,44 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ApiService {
-  private readonly apiEndpoint = 'https://v3.football.api-sports.io/status';
+  private readonly apiEndpoint = 'https://v3.football.api-sports.io';
   private headers = new HttpHeaders();
+  private token: string = '';
 
   constructor(private http: HttpClient) {}
 
   setAuthToken(token: string) {
-    this.headers = this.headers.set('x-apisports-key', `${token}`);
+    this.token = token;
+    this.updateHeaders();
+  }
+
+  private updateHeaders() {
+    this.headers = new HttpHeaders({ 'x-apisports-key': this.token });
   }
 
   validarToken(token: string) {
-    const url = `${this.apiEndpoint}/status`;
-    const headers = new HttpHeaders({ 'x-apisports-key': `${token}` });
+    let url = `${this.apiEndpoint}/status`;
+    const headers = new HttpHeaders({ 'x-apisports-key': token });
     return this.http.get(url, { headers });
   }
 
   obterPaises() {
-    const url = `${this.apiEndpoint}/countries`;
-    return this.http.get(url);
+    let url = `${this.apiEndpoint}/countries`;
+    return this.http.get(url, { headers: this.headers });
   }
 
-  obterLigasPeloPais(pais : string) {
-    const url = `${this.apiEndpoint}/leagues?country=${pais}`;
-    return this.http.get(url);
+  obterTemporadas() {
+    let url = `${this.apiEndpoint}/leagues/seasons`;
+    return this.http.get(url, { headers: this.headers });
   }
 
-  obterTemporadasDaLiga(pais : string) {
-    const url = `${this.apiEndpoint}/leagues/seasons`;
-    return this.http.get(url);
+  obterLigasPeloPais(pais: string) {
+    let url = `${this.apiEndpoint}/leagues?code=${pais}`;
+    return this.http.get(url, { headers: this.headers });
   }
 
-  obterTimesPelaLigaETemporada(liga : string, temporada : string) {
-    const url = `${this.apiEndpoint}/lteams?league=${liga}&season=${temporada}`;
-    return this.http.get(url);
+  obterTimesPelaLiga(liga: string, temporada : string) {
+    let url = `${this.apiEndpoint}/teams?league=${liga}&season=${temporada}`;
+    return this.http.get(url, { headers: this.headers });
   }
 }

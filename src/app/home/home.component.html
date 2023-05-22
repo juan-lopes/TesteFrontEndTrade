@@ -1,1 +1,26 @@
-<p>home works!</p>
+<select [(ngModel)]="selectedCountry" (change)="carregarLigasPorPais()">
+  <option *ngFor="let country of countries" [value]="country.code">
+    <img [src]="country.flag" [alt]="country.name" width="20" height="15">
+    {{ country.name }}
+  </option>
+</select>
+
+<select [(ngModel)]="selectedLeague" (change)="carregarTemporadas()">
+  <option *ngFor="let league of leagues" [value]="league.league.id">
+    {{ league.league.name }}
+  </option>
+</select>
+
+<select [(ngModel)]="selectedSeason" (change)="carregarTimesPelaLigaETemporada()">
+  <option *ngFor="let season of seasons" [value]="season">
+    {{ season }}
+  </option>
+</select>
+
+<select [(ngModel)]="selectedTeam">
+  <option *ngFor="let team of teams" [value]="team.team.id">
+    <img [src]="team.team.logo" [alt]="team.team.name" width="20" height="15">
+    {{ team.team.name }}
+  </option>
+</select>
+
