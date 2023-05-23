@@ -51,8 +51,8 @@ export class ApiService {
     return this.http.get(url, { headers: this.headers });
   }
 
-  obterJogadores(liga: string, temporada : string) {
-    let url = `${this.apiEndpoint}/teams?league=${liga}&season=${temporada}`;
+  obterJogadores(liga: string, temporada : string, time : string) {
+    let url = `${this.apiEndpoint}/players?league=${liga}&season=${temporada}&team=${time}`;
     return this.http.get(url, { headers: this.headers });
   }
 }

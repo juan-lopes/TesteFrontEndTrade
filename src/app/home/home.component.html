@@ -19,7 +19,7 @@
   </option>
 </select>
 
-<select [(ngModel)]="selectedTeam" (change)="preencherTabelaEstatisticasDoTime()">
+<select [(ngModel)]="selectedTeam" (change)="obterInformacoesTime()">
   <option *ngFor="let team of teams" [value]="team.team.id">
     <img [src]="team.team.logo" [alt]="team.team.name" width="20" height="15">
     {{ team.team.name }}
@@ -47,3 +47,11 @@
 </table>
 
 <canvas id="graficoGols"></canvas>
+
+<ul>
+  <li *ngFor="let jogador of jogadores">
+    <h3>{{ jogador.player.name }}</h3>
+    <p>Idade: {{ jogador.player.age }}</p>
+    <p>Nacionalidade: {{ jogador.player.nationality }}</p>
+  </li>
+</ul>

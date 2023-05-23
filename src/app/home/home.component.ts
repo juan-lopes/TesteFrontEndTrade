@@ -17,13 +17,14 @@ export class HomeComponent {
   seasons: any[] = [];
   selectedSeason: string = '';
   teams: any[] = [];
+  jogadores: any[] = [];
   selectedTeam: string = '';
   nomeTime: string = '';
   totalJogos: string = '';
   vitorias: string = '';
   empates: string = '';
   derrotas: string = '';
-  myChart!: Chart ;
+  myChart!: Chart;
 
   ngOnInit() {
     this.apiService.obterPaises().subscribe(
@@ -75,6 +76,27 @@ export class HomeComponent {
       );
   }
 
+  obterInformacoesTime() {
+    this.preencherTabelaEstatisticasDoTime();
+    this.preencherJogadores();
+  }
+
+  preencherJogadores() {
+    const liga = this.selectedLeague.toString();
+    const temporada = this.selectedSeason.toString();
+    const time = this.selectedTeam.toString();
+
+    this.apiService.obterJogadores(liga, temporada, time).subscribe(
+      (response: any) => {
+        console.log(response.response)
+        this.jogadores = response.response;
+      },
+      (error) => {
+        console.error('Erro ao obter jogadores:', error);
+      }
+    );
+  }
+
   preencherTabelaEstatisticasDoTime() {
     const liga = this.selectedLeague.toString();
     const temporada = this.selectedSeason.toString();
@@ -98,32 +120,43 @@ export class HomeComponent {
   criarGraficoGols(response: any) {
     console.log(response);
     const goalsData = {
-      labels: ['0-15', '16-30', '31-45', '46-60', '61-75', '76-90', '91-105', '106-120'],
-      datasets: [{
-        label: 'Gols por Minuto',
-        data: [
-          response.response.goals.for.minute['0-15'].total,
-          response.response.goals.for.minute['16-30'].total,
-          response.response.goals.for.minute['31-45'].total,
-          response.response.goals.for.minute['46-60'].total,
-          response.response.goals.for.minute['61-75'].total,
-          response.response.goals.for.minute['76-90'].total,
-          response.response.goals.for.minute['91-105'].total,
-          response.response.goals.for.minute['106-120'].total || 0
-        ],
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }]
+      labels: [
+        '0-15',
+        '16-30',
+        '31-45',
+        '46-60',
+        '61-75',
+        '76-90',
+        '91-105',
+        '106-120',
+      ],
+      datasets: [
+        {
+          label: 'Gols por Minuto',
+          data: [
+            response.response.goals.for.minute['0-15'].total,
+            response.response.goals.for.minute['16-30'].total,
+            response.response.goals.for.minute['31-45'].total,
+            response.response.goals.for.minute['46-60'].total,
+            response.response.goals.for.minute['61-75'].total,
+            response.response.goals.for.minute['76-90'].total,
+            response.response.goals.for.minute['91-105'].total,
+            response.response.goals.for.minute['106-120'].total || 0,
+          ],
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+        },
+      ],
     };
-  
+
     const ctx = document.getElementById('graficoGols') as HTMLCanvasElement;
-  
+
     // Destroy existing chart instance if it exists
     if (this.myChart) {
       this.myChart.destroy();
     }
-  
+
     this.myChart = new Chart(ctx, {
       type: 'bar',
       data: goalsData,
@@ -133,11 +166,11 @@ export class HomeComponent {
             type: 'linear', // Set the scale type to 'linear'
             beginAtZero: true,
             ticks: {
-              stepSize: 1
-            }
-          }
-        }
-      }
+              stepSize: 1,
+            },
+          },
+        },
+      },
     });
   }
 }
