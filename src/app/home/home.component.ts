@@ -152,7 +152,6 @@ export class HomeComponent {
 
     const ctx = document.getElementById('graficoGols') as HTMLCanvasElement;
 
-    // Destroy existing chart instance if it exists
     if (this.myChart) {
       this.myChart.destroy();
     }
@@ -163,7 +162,7 @@ export class HomeComponent {
       options: {
         scales: {
           y: {
-            type: 'linear', // Set the scale type to 'linear'
+            type: 'linear', 
             beginAtZero: true,
             ticks: {
               stepSize: 1,

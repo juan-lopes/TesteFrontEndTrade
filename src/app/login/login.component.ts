@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,8 @@ export class LoginComponent {
 
   constructor(
     private apiService: ApiService,
-    private router: Router) { }
+    private router: Router,
+    private authService: AuthService) { }
 
   validarApiKey() {
     const apiKey = this.apiKey;
@@ -24,6 +26,7 @@ export class LoginComponent {
         } else {
           console.log('Token valido:', response);
           this.apiService.setAuthToken(apiKey);
+          this.authService.setAuthToken(apiKey)
           this.router.navigate(['/home']);
         }
       },
