@@ -1,62 +1,92 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<h1>Busque os dados do time que deseja</h1>
+<div class="container">
+  <h1>Busque os dados do time que deseja</h1>
 
-<label for="countrySelect">País:</label>
-<select id="countrySelect" [(ngModel)]="selectedCountry" (change)="carregarLigasPorPais()">
-  <option *ngFor="let country of countries" [value]="country.code">
-    <img [src]="country.flag" [alt]="country.name" width="20" height="15">
-    {{ country.name }}
-  </option>
-</select>
+  <div class="selects">
+  <label for="countrySelect">País:</label>
+  <select
+    id="countrySelect"
+    [(ngModel)]="selectedCountry"
+    (change)="carregarLigasPorPais()"
+  >
+    <option *ngFor="let country of countries" [value]="country.code">
+      <img [src]="country.flag" [alt]="country.name" width="20" height="15" />
+      {{ country.name }}
+    </option>
+  </select>
 
-<label for="leagueSelect">Liga:</label>
-<select id="leagueSelect" [(ngModel)]="selectedLeague" (change)="carregarTemporadas()">
-  <option *ngFor="let league of leagues" [value]="league.league.id">
-    {{ league.league.name }}
-  </option>
-</select>
+  <label for="leagueSelect">Liga:</label>
+  <select
+    id="leagueSelect"
+    [(ngModel)]="selectedLeague"
+    (change)="carregarTemporadas()"
+  >
+    <option *ngFor="let league of leagues" [value]="league.league.id">
+      {{ league.league.name }}
+    </option>
+  </select>
 
-<label for="seasonSelect">Temporada:</label>
-<select id="seasonSelect" [(ngModel)]="selectedSeason" (change)="carregarTimesPelaLigaETemporada()">
-  <option *ngFor="let season of seasons" [value]="season">
-    {{ season }}
-  </option>
-</select>
+  <label for="seasonSelect">Temporada:</label>
+  <select
+    id="seasonSelect"
+    [(ngModel)]="selectedSeason"
+    (change)="carregarTimesPelaLigaETemporada()"
+  >
+    <option *ngFor="let season of seasons" [value]="season">
+      {{ season }}
+    </option>
+  </select>
 
-<label for="teamSelect">Time:</label>
-<select id="teamSelect" [(ngModel)]="selectedTeam" (change)="obterInformacoesTime()">
-  <option *ngFor="let team of teams" [value]="team.team.id">
-    <img [src]="team.team.logo" [alt]="team.team.name" width="20" height="15">
-    {{ team.team.name }}
-  </option>
-</select>
+  <label for="teamSelect">Time:</label>
+  <select
+    id="teamSelect"
+    [(ngModel)]="selectedTeam"
+    (change)="obterInformacoesTime()"
+  >
+    <option *ngFor="let team of teams" [value]="team.team.id">
+      <img
+        [src]="team.team.logo"
+        [alt]="team.team.name"
+        width="20"
+        height="15"
+      />
+      {{ team.team.name }}
+    </option>
+  </select>
+</div>
+  <table *ngIf="selectedTeam">
+    <caption>
+      Estatísticas do Time:
+      {{
+        nomeTime
+      }}
+    </caption>
+    <thead>
+      <tr>
+        <th>Total de Jogos</th>
+        <th>Vitórias</th>
+        <th>Empates</th>
+        <th>Derrotas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ totalJogos }}</td>
+        <td>{{ vitorias }}</td>
+        <td>{{ empates }}</td>
+        <td>{{ derrotas }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-<table *ngIf="selectedTeam">
-  <caption>Estatísticas do Time: {{nomeTime}}</caption>
-  <thead>
-    <tr>
-      <th>Total de Jogos</th>
-      <th>Vitórias</th>
-      <th>Empates</th>
-      <th>Derrotas</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{{totalJogos}}</td>
-      <td>{{vitorias}}</td>
-      <td>{{empates}}</td>
-      <td>{{derrotas}}</td>
-    </tr>
-  </tbody>
-</table>
+  <canvas id="graficoGols" *ngIf="selectedTeam"></canvas>
 
-<canvas id="graficoGols" *ngIf="selectedTeam"></canvas>
-
-<ul *ngIf="selectedTeam">
-  <li *ngFor="let jogador of jogadores">
-    <h3>{{ jogador.player.name }}</h3>
-    <p>Idade: {{ jogador.player.age }}</p>
-    <p>Nacionalidade: {{ jogador.player.nationality }}</p>
-  </li>
-</ul>
+  <ul class="players-list" *ngIf="selectedTeam">
+    <li *ngFor="let jogador of jogadores">
+      <h3>{{ jogador.player.name }}</h3>
+      <p>Idade: {{ jogador.player.age }}</p>
+      <p>Nacionalidade: {{ jogador.player.nationality }}</p>
+    </li>
+  </ul>
+  
+</div>
