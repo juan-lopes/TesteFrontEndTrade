@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../services/api.service';
+import { Chart } from 'chart.js/auto';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,12 @@ export class HomeComponent {
   selectedSeason: string = '';
   teams: any[] = [];
   selectedTeam: string = '';
+  nomeTime: string = '';
+  totalJogos: string = '';
+  vitorias: string = '';
+  empates: string = '';
+  derrotas: string = '';
+  myChart!: Chart ;
 
   ngOnInit() {
     this.apiService.obterPaises().subscribe(
@@ -34,7 +41,7 @@ export class HomeComponent {
     this.apiService.obterLigasPeloPais(selectedCountry).subscribe(
       (response: any) => {
         this.leagues = response.response;
-        console.log(response.response)
+        console.log(response.response);
       },
       (error) => {
         console.error('Erro ao obter ligas:', error);
@@ -54,15 +61,83 @@ export class HomeComponent {
   }
 
   carregarTimesPelaLigaETemporada() {
-    const selectedLeague = this.selectedLeague; 
-    const selectedSeason = this.selectedSeason; 
-    this.apiService.obterTimesPelaLiga(selectedLeague, selectedSeason).subscribe(
+    const selectedLeague = this.selectedLeague;
+    const selectedSeason = this.selectedSeason;
+    this.apiService
+      .obterTimesPelaLiga(selectedLeague, selectedSeason)
+      .subscribe(
+        (response: any) => {
+          this.teams = response.response;
+        },
+        (error) => {
+          console.error('Erro ao obter times:', error);
+        }
+      );
+  }
+
+  preencherTabelaEstatisticasDoTime() {
+    const liga = this.selectedLeague.toString();
+    const temporada = this.selectedSeason.toString();
+    const time = this.selectedTeam.toString();
+
+    this.apiService.obterEstatisticasDoTime(liga, temporada, time).subscribe(
       (response: any) => {
-        this.teams = response.response;
+        this.nomeTime = response.response.team.name;
+        this.totalJogos = response.response.fixtures.played.total;
+        this.vitorias = response.response.fixtures.wins.total;
+        this.empates = response.response.fixtures.draws.total;
+        this.derrotas = response.response.fixtures.loses.total;
+        this.criarGraficoGols(response);
       },
       (error) => {
-        console.error('Erro ao obter times:', error);
+        console.error('Erro ao obter estatísticas do time:', error);
       }
     );
+  }
+
+  criarGraficoGols(response: any) {
+    console.log(response);
+    const goalsData = {
+      labels: ['0-15', '16-30', '31-45', '46-60', '61-75', '76-90', '91-105', '106-120'],
+      datasets: [{
+        label: 'Gols por Minuto',
+        data: [
+          response.response.goals.for.minute['0-15'].total,
+          response.response.goals.for.minute['16-30'].total,
+          response.response.goals.for.minute['31-45'].total,
+          response.response.goals.for.minute['46-60'].total,
+          response.response.goals.for.minute['61-75'].total,
+          response.response.goals.for.minute['76-90'].total,
+          response.response.goals.for.minute['91-105'].total,
+          response.response.goals.for.minute['106-120'].total || 0
+        ],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    };
+  
+    const ctx = document.getElementById('graficoGols') as HTMLCanvasElement;
+  
+    // Destroy existing chart instance if it exists
+    if (this.myChart) {
+      this.myChart.destroy();
+    }
+  
+    this.myChart = new Chart(ctx, {
+      type: 'bar',
+      data: goalsData,
+      options: {
+        scales: {
+          y: {
+            type: 'linear', // Set the scale type to 'linear'
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
   }
 }

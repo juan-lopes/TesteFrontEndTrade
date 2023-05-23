@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <select [(ngModel)]="selectedCountry" (change)="carregarLigasPorPais()">
   <option *ngFor="let country of countries" [value]="country.code">
     <img [src]="country.flag" [alt]="country.name" width="20" height="15">
@@ -17,10 +19,31 @@
   </option>
 </select>
 
-<select [(ngModel)]="selectedTeam">
+<select [(ngModel)]="selectedTeam" (change)="preencherTabelaEstatisticasDoTime()">
   <option *ngFor="let team of teams" [value]="team.team.id">
     <img [src]="team.team.logo" [alt]="team.team.name" width="20" height="15">
     {{ team.team.name }}
   </option>
 </select>
 
+<table>
+  <caption>Estatísticas do Time: {{nomeTime}}</caption>
+  <thead>
+    <tr>
+      <th>Total de Jogos</th>
+      <th>Vitórias</th>
+      <th>Empates</th>
+      <th>Derrotas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{totalJogos}}</td>
+      <td>{{vitorias}}</td>
+      <td>{{empates}}</td>
+      <td>{{derrotas}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<canvas id="graficoGols"></canvas>
