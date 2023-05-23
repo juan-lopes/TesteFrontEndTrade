@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Chart } from 'chart.js/auto';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,9 @@ import { Chart } from 'chart.js/auto';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private toastr: ToastrService) {}
 
   countries: any[] = [];
   selectedCountry: string = '';
