@@ -1,0 +1,32 @@
+/* toastr-custom.css */
+.toast-success {
+    background-color: #51b96e;
+  }
+  
+  .toast-error {
+    background-color: #e74c3c;
+  }
+  
+  .toast-warning {
+    background-color: #f39c12;
+  }
+  
+  .toast-info {
+    background-color: #3498db;
+  }
+  
+  .toast-container {
+    width: 320px;
+    padding: 10px;
+  }
+  
+  .toast-message {
+    font-family: "Arial", sans-serif;
+    font-size: 14px;
+    color: #fff;
+  }
+  
+  .toast-close-button {
+    color: #fff;
+  }
+  
